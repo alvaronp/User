@@ -1,0 +1,645 @@
+openapi: 3.0.3
+info:
+  title: Bookify's User - OpenAPI 3.0
+  description: This is the API implementation for Bookify's user actions
+  version: 1.0.0
+servers:
+- url: /
+tags:
+- name: user
+  description: Actions to Bookify's users
+paths:
+  /user:
+    post:
+      tags:
+      - user
+      summary: Create user
+      description: Creates an user account to enter to Bookify app.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+      x-swagger-router-controller: User
+  /user/{username}:
+    get:
+      tags:
+      - user
+      summary: Get user info
+      description: Returns the user data
+      operationId: getUser
+      parameters:
+      - name: username
+        in: path
+        description: The user's username to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubUser'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SubUser'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Author not found
+      x-swagger-router-controller: User
+    put:
+      tags:
+      - user
+      summary: Update user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+      - name: username
+        in: path
+        description: name that need to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+        "400":
+          description: Invalid username supplied
+        "404":
+          description: User not found
+      x-swagger-router-controller: User
+    delete:
+      tags:
+      - user
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+      - name: username
+        in: path
+        description: The name that needs to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid username supplied
+        "404":
+          description: User not found
+      x-swagger-router-controller: User
+  /user/{username}/statistic:
+    get:
+      tags:
+      - user
+      summary: Get user statistics
+      description: Returns the user statistics data
+      operationId: getStatistics
+      parameters:
+      - name: username
+        in: path
+        description: The user's username to return his/her statistics
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statistics'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Statistics'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: User not found
+      x-swagger-router-controller: User
+  /user/{username}/historysubs:
+    get:
+      tags:
+      - user
+      summary: Get user suscriptions's history
+      description: Returns the user suscriptions's history
+      operationId: getHistSubs
+      parameters:
+      - name: username
+        in: path
+        description: The user's username to return his/her suscriptions's history
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Suscription'
+                x-content-type: application/json
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Suscription'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: User not found
+      x-swagger-router-controller: User
+  /user/{username}/ratings/{bookId}:
+    post:
+      tags:
+      - user
+      summary: Rate a Bookify's book
+      description: Returns the user rating
+      operationId: postRating
+      parameters:
+      - name: username
+        in: path
+        description: User's username that need to rate the book
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: bookId
+        in: path
+        description: ID of the book that need to be rated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Rate an existent book in Bookify
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rating'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Rating'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Rating'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rating'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Rating'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: User not found
+      x-swagger-router-controller: User
+  /user/{username}/favBooks/{bookId}:
+    post:
+      tags:
+      - user
+      summary: Add to favourites a Bookify's book
+      description: Returns the favourite book's id
+      operationId: postFav
+      parameters:
+      - name: username
+        in: path
+        description: User's username that need to add to favourites list the book
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: bookId
+        in: path
+        description: ID of the book that need to be added
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Add an existent book to the user's favourites book list
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FavBook'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/FavBook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FavBook'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavBook'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FavBook'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: User not found
+      x-swagger-router-controller: User
+    delete:
+      tags:
+      - user
+      summary: Delete from user's favourite books a Bookify's book
+      description: Delete from user's favourite books a Bookify's book
+      operationId: deleteFav
+      parameters:
+      - name: username
+        in: path
+        description: User's username that need to delete from favourites list the
+          book
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: bookId
+        in: path
+        description: ID of the favourite book that need to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: User not found
+      x-swagger-router-controller: User
+  /user/{username}/favBooks:
+    get:
+      tags:
+      - user
+      summary: Get user's favourite book's list
+      description: Returns the user's favourite book's list
+      operationId: getFavBooks
+      parameters:
+      - name: username
+        in: path
+        description: The user's username to return his/her favourite book's list
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FavBook'
+                x-content-type: application/json
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FavBook'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: User not found
+      x-swagger-router-controller: User
+  /user/login:
+    get:
+      tags:
+      - user
+      summary: Logs user into Bookify app
+      description: ""
+      operationId: loginUser
+      parameters:
+      - name: username
+        in: query
+        description: The user name for login
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: password
+        in: query
+        description: The password for login in clear text
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              style: simple
+              explode: false
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                type: string
+                x-content-type: application/xml
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Invalid username/password supplied
+      x-swagger-router-controller: User
+  /user/logout:
+    get:
+      tags:
+      - user
+      summary: Logs out current logged in user session
+      description: ""
+      operationId: logoutUser
+      responses:
+        default:
+          description: successful operation
+      x-swagger-router-controller: User
+components:
+  schemas:
+    SubUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        username:
+          type: string
+          example: johndoe123
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: johndoe@email.com
+        password:
+          type: string
+          example: "12345678"
+        statistics:
+          $ref: '#/components/schemas/Statistics'
+        ratings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rating'
+        historysubs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Suscription'
+        favbooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/FavBook'
+        bankAccount:
+          type: string
+          example: XXXX-XXX-1234
+      example:
+        bankAccount: XXXX-XXX-1234
+        firstName: John
+        lastName: Doe
+        password: "12345678"
+        ratings:
+        - rate: 4.7
+          comment: I loved it!
+          bookId: 1
+        - rate: 4.7
+          comment: I loved it!
+          bookId: 1
+        favbooks:
+        - bookId: 1
+        - bookId: 1
+        id: 1
+        email: johndoe@email.com
+        historysubs:
+        - endDate: 16/12/2022
+          price: 5.49
+          userId: 1
+          startDate: 16/11/2022
+        - endDate: 16/12/2022
+          price: 5.49
+          userId: 1
+          startDate: 16/11/2022
+        username: johndoe123
+        statistics:
+          favgenre: Fantasy
+          audiolistened: 7
+          minlistened: 285
+          nbookread: 18
+          hoursread: 137
+      xml:
+        name: subuser
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        username:
+          type: string
+          example: johndoe123
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: johndoe@email.com
+        password:
+          type: string
+          example: "12345678"
+        historysubs:
+          type: array
+          items: {}
+      example:
+        firstName: John
+        lastName: Doe
+        password: "12345678"
+        id: 1
+        email: johndoe@email.com
+        historysubs:
+        - ""
+        - ""
+        username: johndoe123
+      xml:
+        name: user
+    Genre:
+      type: string
+      description: Book genres enum
+      enum:
+      - Fantasy
+      - Sci-Fi
+      - Horror
+      - Adventure
+      - Mistery
+      - Romance
+      - History
+      - Drama
+      - Thriller
+      - Comedy
+      - Poetry
+    Statistics:
+      type: object
+      properties:
+        nbookread:
+          type: integer
+          example: 18
+        hoursread:
+          type: number
+          example: 137
+        audiolistened:
+          type: integer
+          example: 7
+        minlistened:
+          type: integer
+          example: 285
+        favgenre:
+          $ref: '#/components/schemas/Genre'
+      example:
+        favgenre: Fantasy
+        audiolistened: 7
+        minlistened: 285
+        nbookread: 18
+        hoursread: 137
+      xml:
+        name: statistics
+    Rating:
+      type: object
+      properties:
+        bookId:
+          type: integer
+          example: 1
+        comment:
+          type: string
+          example: I loved it!
+        rate:
+          maximum: 5
+          minimum: 1
+          type: number
+          example: 4.7
+      example:
+        rate: 4.7
+        comment: I loved it!
+        bookId: 1
+      xml:
+        name: rating
+    FavBook:
+      type: object
+      properties:
+        bookId:
+          type: integer
+          example: 1
+      example:
+        bookId: 1
+      xml:
+        name: favbook
+    Suscription:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        startDate:
+          type: string
+          example: 16/11/2022
+        endDate:
+          type: string
+          example: 16/12/2022
+        price:
+          type: number
+          example: 5.49
+      example:
+        endDate: 16/12/2022
+        price: 5.49
+        userId: 1
+        startDate: 16/11/2022
+      xml:
+        name: subcription
+  requestBodies:
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
