@@ -13,8 +13,8 @@ module.exports.createUser = function createUser (req, res, next, body) {
     });
 };
 
-module.exports.createUser = function createUser (req, res, next, body) {
-  User.createUser(body)
+module.exports.deleteFav = function deleteFav (req, res, next, userId, bookId) {
+  User.deleteFav(userId, bookId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -23,8 +23,8 @@ module.exports.createUser = function createUser (req, res, next, body) {
     });
 };
 
-module.exports.deleteFav = function deleteFav (req, res, next, username, bookId) {
-  User.deleteFav(username, bookId)
+module.exports.deleteUser = function deleteUser (req, res, next, userId) {
+  User.deleteUser(userId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -33,8 +33,8 @@ module.exports.deleteFav = function deleteFav (req, res, next, username, bookId)
     });
 };
 
-module.exports.deleteUser = function deleteUser (req, res, next, username) {
-  User.deleteUser(username)
+module.exports.getFavBooks = function getFavBooks (req, res, next, userId) {
+  User.getFavBooks(userId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -43,8 +43,8 @@ module.exports.deleteUser = function deleteUser (req, res, next, username) {
     });
 };
 
-module.exports.getFavBooks = function getFavBooks (req, res, next, username) {
-  User.getFavBooks(username)
+module.exports.getHistSubs = function getHistSubs (req, res, next, userId) {
+  User.getHistSubs(userId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -53,8 +53,8 @@ module.exports.getFavBooks = function getFavBooks (req, res, next, username) {
     });
 };
 
-module.exports.getHistSubs = function getHistSubs (req, res, next, username) {
-  User.getHistSubs(username)
+module.exports.getStatistics = function getStatistics (req, res, next, userId) {
+  User.getStatistics(userId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -63,18 +63,8 @@ module.exports.getHistSubs = function getHistSubs (req, res, next, username) {
     });
 };
 
-module.exports.getStatistics = function getStatistics (req, res, next, username) {
-  User.getStatistics(username)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-};
-
-module.exports.getUser = function getUser (req, res, next, username) {
-  User.getUser(username)
+module.exports.getUser = function getUser (req, res, next, userId) {
+  User.getUser(userId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -103,8 +93,8 @@ module.exports.logoutUser = function logoutUser (req, res, next) {
     });
 };
 
-module.exports.postFav = function postFav (req, res, next, body, username, bookId) {
-  User.postFav(body, username, bookId)
+module.exports.postFav = function postFav (req, res, next, userId, bookId) {
+  User.postFav(userId, bookId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -113,8 +103,8 @@ module.exports.postFav = function postFav (req, res, next, body, username, bookI
     });
 };
 
-module.exports.postFav = function postFav (req, res, next, body, username, bookId) {
-  User.postFav(body, username, bookId)
+module.exports.postRating = function postRating (req, res, next, body, userId) {
+  User.postRating(body, userId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -123,38 +113,8 @@ module.exports.postFav = function postFav (req, res, next, body, username, bookI
     });
 };
 
-module.exports.postRating = function postRating (req, res, next, body, username, bookId) {
-  User.postRating(body, username, bookId)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-};
-
-module.exports.postRating = function postRating (req, res, next, body, username, bookId) {
-  User.postRating(body, username, bookId)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-};
-
-module.exports.updateUser = function updateUser (req, res, next, body, username) {
-  User.updateUser(body, username)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-};
-
-module.exports.updateUser = function updateUser (req, res, next, body, username) {
-  User.updateUser(body, username)
+module.exports.updateUser = function updateUser (req, res, next, body) {
+  User.updateUser(body)
     .then(function (response) {
       utils.writeJson(res, response);
     })

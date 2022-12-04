@@ -39,7 +39,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
       x-swagger-router-controller: User
-  /user/{username}:
+    put:
+      tags:
+      - user
+      summary: Update user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      requestBody:
+        description: Update an existent user in the app
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+        "400":
+          description: Invalid userId supplied
+        "404":
+          description: User not found
+      x-swagger-router-controller: User
+  /user/{userId}:
     get:
       tags:
       - user
@@ -47,9 +73,9 @@ paths:
       description: Returns the user data
       operationId: getUser
       parameters:
-      - name: username
+      - name: userId
         in: path
-        description: The user's username to return
+        description: The user's userId to return
         required: true
         style: simple
         explode: false
@@ -71,41 +97,6 @@ paths:
         "404":
           description: Author not found
       x-swagger-router-controller: User
-    put:
-      tags:
-      - user
-      summary: Update user
-      description: This can only be done by the logged in user.
-      operationId: updateUser
-      parameters:
-      - name: username
-        in: path
-        description: name that need to be updated
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      requestBody:
-        description: Update an existent user in the store
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/User'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        default:
-          description: successful operation
-        "400":
-          description: Invalid username supplied
-        "404":
-          description: User not found
-      x-swagger-router-controller: User
     delete:
       tags:
       - user
@@ -113,21 +104,22 @@ paths:
       description: This can only be done by the logged in user.
       operationId: deleteUser
       parameters:
-      - name: username
+      - name: userId
         in: path
         description: The name that needs to be deleted
         required: true
         style: simple
         explode: false
         schema:
-          type: string
+          type: integer
+          format: int64
       responses:
         "400":
-          description: Invalid username supplied
+          description: Invalid userId supplied
         "404":
           description: User not found
       x-swagger-router-controller: User
-  /user/{username}/statistic:
+  /user/{userId}/statistic:
     get:
       tags:
       - user
@@ -135,9 +127,9 @@ paths:
       description: Returns the user statistics data
       operationId: getStatistics
       parameters:
-      - name: username
+      - name: userId
         in: path
-        description: The user's username to return his/her statistics
+        description: The user's userId to return his/her statistics
         required: true
         style: simple
         explode: false
@@ -159,7 +151,7 @@ paths:
         "404":
           description: User not found
       x-swagger-router-controller: User
-  /user/{username}/historysubs:
+  /user/{userId}/historysubs:
     get:
       tags:
       - user
@@ -167,9 +159,9 @@ paths:
       description: Returns the user suscriptions's history
       operationId: getHistSubs
       parameters:
-      - name: username
+      - name: userId
         in: path
-        description: The user's username to return his/her suscriptions's history
+        description: The user's id to return his/her suscriptions's history
         required: true
         style: simple
         explode: false
@@ -196,7 +188,7 @@ paths:
         "404":
           description: User not found
       x-swagger-router-controller: User
-  /user/{username}/ratings/{bookId}:
+  /user/{userId}/ratings/{bookId}:
     post:
       tags:
       - user
@@ -204,22 +196,15 @@ paths:
       description: Returns the user rating
       operationId: postRating
       parameters:
-      - name: username
+      - name: userId
         in: path
-        description: User's username that need to rate the book
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: bookId
-        in: path
-        description: ID of the book that need to be rated
+        description: User's id that need to rate the book
         required: true
         style: simple
         explode: false
         schema:
           type: integer
+          format: int64
       requestBody:
         description: Rate an existent book in Bookify
         content:
@@ -247,7 +232,7 @@ paths:
         "404":
           description: User not found
       x-swagger-router-controller: User
-  /user/{username}/favBooks/{bookId}:
+  /user/{userId}/favBooks/{bookId}:
     post:
       tags:
       - user
@@ -255,14 +240,15 @@ paths:
       description: Returns the favourite book's id
       operationId: postFav
       parameters:
-      - name: username
+      - name: userId
         in: path
-        description: User's username that need to add to favourites list the book
+        description: User's id that need to add to favourites list the book
         required: true
         style: simple
         explode: false
         schema:
-          type: string
+          type: integer
+          format: int64
       - name: bookId
         in: path
         description: ID of the book that need to be added
@@ -271,18 +257,6 @@ paths:
         explode: false
         schema:
           type: integer
-      requestBody:
-        description: Add an existent book to the user's favourites book list
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FavBook'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/FavBook'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/FavBook'
       responses:
         "200":
           description: successful operation
@@ -305,15 +279,16 @@ paths:
       description: Delete from user's favourite books a Bookify's book
       operationId: deleteFav
       parameters:
-      - name: username
+      - name: userId
         in: path
-        description: User's username that need to delete from favourites list the
+        description: User's id that need to delete from favourites list the
           book
         required: true
         style: simple
         explode: false
         schema:
-          type: string
+          type: integer
+          format: int64
       - name: bookId
         in: path
         description: ID of the favourite book that need to be deleted
@@ -328,7 +303,7 @@ paths:
         "404":
           description: User not found
       x-swagger-router-controller: User
-  /user/{username}/favBooks:
+  /user/{userId}/favBooks:
     get:
       tags:
       - user
@@ -336,9 +311,9 @@ paths:
       description: Returns the user's favourite book's list
       operationId: getFavBooks
       parameters:
-      - name: username
+      - name: userId
         in: path
-        description: The user's username to return his/her favourite book's list
+        description: The user's userId to return his/her favourite book's list
         required: true
         style: simple
         explode: false
@@ -416,7 +391,7 @@ paths:
               schema:
                 type: string
         "400":
-          description: Invalid username/password supplied
+          description: Invalid userId/password supplied
       x-swagger-router-controller: User
   /user/logout:
     get:
@@ -438,7 +413,7 @@ components:
           type: integer
           format: int64
           example: 1
-        username:
+        userId:
           type: string
           example: johndoe123
         firstName:
@@ -496,7 +471,7 @@ components:
           price: 5.49
           userId: 1
           startDate: 16/11/2022
-        username: johndoe123
+        userId: johndoe123
         statistics:
           favgenre: Fantasy
           audiolistened: 7
@@ -512,7 +487,7 @@ components:
           type: integer
           format: int64
           example: 1
-        username:
+        userId:
           type: string
           example: johndoe123
         firstName:
@@ -539,7 +514,7 @@ components:
         historysubs:
         - ""
         - ""
-        username: johndoe123
+        userId: johndoe123
       xml:
         name: user
     Genre:
